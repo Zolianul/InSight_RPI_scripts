@@ -132,5 +132,5 @@ Steps to run the application (Ensure that the list of imports described above is
     GPIO.cleanup()"
   
 - Run the main.py script: python3 main.py
-- To view the live stream, the user will need to either use the mobile application or enter a browser and access: [Previously provided IP address]:5000. To view the video stream, the device from which the stream is being viewed must be on the internet network with the provided IP.
+- To view the live stream, the user will need to either use the mobile application or enter a browser and access: http://[Previously provided IP address]:5000. To view the video stream, the device from which the stream is being viewed must be on the internet network with the provided IP.
 - To stop the stream, type the command "CTRL+C" in the terminal window
