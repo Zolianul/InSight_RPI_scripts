@@ -127,7 +127,6 @@ Steps to run the application (Ensure that the list of imports described above is
 - Open the terminal window
 - Navigate to the location where the main.py script is saved using the "cd ..", "ls .." commands
 - Inside the main.py script, replace the IP address from "host:xxx.xxx.xxx.xxx" with the IP address of the internet network where the script is running (e.g., "host:192.168.62.48"):
-- 
 "    if __name__ == '__main__':
     app.run(host='xxx.xxx.xxx.xxx', debug=True, threaded=True, port=5000)
     GPIO.cleanup()"
