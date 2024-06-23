@@ -1,0 +1,365 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<style>
+body {
+  margin: 0;
+  font-family: Arial, Helvetica, sans-serif;
+  overflow: hidden;
+  background-color: black;
+}
+
+.navbar {
+  overflow: hidden;
+  position: fixed;
+  bottom: 0;
+  width: 100%;
+  margin: auto;
+  background-color: black;
+  opacity: 0.6;
+  display: none; /* Initially hidden */
+}
+
+.navbar a {
+  float: left;
+  display: block;
+  color: #f2f2f2;
+  text-align: center;
+  padding: 14px 16px;
+  text-decoration: none;
+  font-size: 17px;
+}
+
+.navbar a:hover {
+  background-color: #ddd;
+  color: black;
+}
+
+.navbar a.active {
+  background-color: #4CAF50;
+  color: white;
+}
+
+.main {
+  padding: 16px;
+  margin-bottom: 30px;
+}
+
+.camera-movement {
+  float: none;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
+
+.lights-button {
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+}
+
+i.fa {
+  display: inline-block;
+  border-radius: 60px;
+  box-shadow: 0px 0px 2px #888;
+  padding: 0.5em 0.6em;
+}
+
+img {
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
+  width: 35%;
+}
+
+button {
+  background-color: Transparent;
+  background-repeat: no-repeat;
+  border: none;
+  cursor: pointer;
+  overflow: hidden;
+  outline: none;
+}
+
+.camera-bg {
+  position: fixed;
+  top: 0;
+  left: 0;
+  min-width: 100%;
+  min-height: 100%;
+  height: 100%;
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: cover;
+}
+
+.top-right-logo {
+  position: absolute;
+  top: 3%;
+  left: 2%;
+  font-size: 38px;
+  color: white;
+  opacity: 0.5;
+}
+
+.login-form {
+  position: fixed;
+  top: 20%;
+  right: 2%;
+  background-color: white;
+  padding: 20px;
+  border-radius: 8px;
+  box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.5);
+}
+
+.login-form input[type="email"],
+.login-form input[type="password"] {
+  width: 100%;
+  padding: 10px;
+  margin: 10px 0;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+}
+
+.login-form button {
+  width: 100%;
+  padding: 10px;
+  background-color: #4CAF50;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.login-form button:hover {
+  background-color: #45a049;
+}
+</style>
+</head>
+<title>RPI-LiveStream</title>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+<script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
+<script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-auth.js"></script>
+<script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-storage.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script> <!-- Include html2canvas -->
+<script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+
+<body>
+<div class="main" id="newpost">
+  <img class="camera-bg" style="width: 100%; height: 80%; background-attachment: fixed;" id="bg" src="{{ url_for('video_feed') }}">
+</div>
+
+<div class="top-right-logo">
+  <a>Raspberry Pi - Camera Stream</a>
+</div>
+
+<div class="navbar" id="navbar">
+  <div class="ignoreCall">
+    <a id="decline" class="but_def">
+      <button id="button">
+        <i style="background: red; color: white;" class="fa fa-times fa-2x" aria-hidden="true"></i>
+      </button>
+    </a>
+  </div>
+
+  <div class="picture">
+    <a href="#" id="take-picture" class="picture_class">
+      <button id="take-picture-button">
+        <i style="background: blue; color: white;" class="fa fa-camera fa-2x" aria-hidden="true"></i>
+      </button>
+    </a>
+  </div>
+
+  <form method="post">
+    <div class="camera-movement">
+      <a href="#" id="up">
+        <button>
+          <i class="fa fa-chevron-up fa-2x" style="color: white" aria-hidden="true"></i>
+        </button>
+      </a>
+      <a href="#" id="left">
+        <button>
+          <i class="fa fa-chevron-left fa-2x" style="color: white" aria-hidden="true"></i>
+        </button>
+      </a>
+      <a href="#" id="center">
+        <button>
+          <i class="fa fa-dot-circle-o fa-2x" style="color: white" aria-hidden="true"></i>
+        </button>
+      </a>
+      <a href="#" id="right">
+        <button>
+          <i class="fa fa-chevron-right fa-2x" style="color: white" aria-hidden="true"></i>
+        </button>
+      </a>
+      <a href="#" id="down">
+        <button>
+          <i class="fa fa-chevron-down fa-2x" style="color: white" aria-hidden="true"></i>
+        </button>
+      </a>
+    </div>
+  </form>
+</div>
+
+<div class="lights-button">
+  <a href="#" id="lights">
+    <button>
+      <i class="fa fa-lightbulb-o fa-2x" style="color: white" aria-hidden="true"></i>
+    </button>
+  </a>
+</div>
+
+<div class="login-form" id="login-form">
+  <h2>Login</h2>
+  <input type="email" id="email" placeholder="Email">
+  <input type="password" id="password" placeholder="Password">
+  <button onclick="login()">Login</button>
+</div>
+
+<script>
+ 
+  const firebaseConfig = {
+    apiKey: "AIzaSyAZe_IawCBc0Y9NPSrgxPvdrLDSxdf2aMc",
+    authDomain: "insight-4b54a.firebaseapp.com",
+    databaseURL: "https://insight-4b54a-default-rtdb.firebaseio.com",
+    projectId: "insight-4b54a",
+    storageBucket: "insight-4b54a.appspot.com",
+    messagingSenderId: "39773992501",
+    appId: "1:39773992501:web:e1cd19259917d72417e37c",
+    measurementId: "G-2CEYFW7C2H"
+  };
+
+
+  firebase.initializeApp(firebaseConfig);
+
+
+  function login() {
+    const email = document.getElementById('email').value;
+    const password = document.getElementById('password').value;
+
+    firebase.auth().signInWithEmailAndPassword(email, password)
+      .then((userCredential) => {
+
+        var user = userCredential.user;
+        alert('Logged in successfully! ' + user.displayName);
+        
+
+        document.getElementById('login-form').style.display = 'none';
+		
+        
+
+        document.getElementById('navbar').style.display = 'block';
+		
+		$.post('/set_credentials', {email: email, password: password});
+      })
+      .catch((error) => {
+        var errorCode = error.code;
+        var errorMessage = error.message;
+        alert(`Error: ${errorMessage}`);
+      });
+  }
+
+
+  document.getElementById('take-picture-button').addEventListener('click', function() {
+    setTimeout(() => {
+      html2canvas(document.body).then(canvas => {
+        canvas.toBlob(function(blob) {
+          const storageRef = firebase.storage().ref();
+		   const user = firebase.auth().currentUser;
+		   const userID = user.uid;
+          const metadata = {
+            contentType: 'image/jpeg'
+          };
+          const uploadTask = storageRef.child('UserUploads/' + userID + '/RPI/' + Date.now() + '.jpg').put(blob, metadata);
+
+          uploadTask.on('state_changed', 
+            (snapshot) => {
+            
+              var progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
+              console.log('Upload is ' + progress + '% done');
+            }, 
+            (error) => {
+             
+              console.error('Upload failed:', error);
+            }, 
+            () => {
+            
+              uploadTask.snapshot.ref.getDownloadURL().then((downloadURL) => {
+                alert('Screenshot saved successfully! URL: ' + downloadURL);
+              });
+            }
+          );
+        }, 'image/jpeg'); 
+      });
+    }, 1000); 
+  });
+
+  document.getElementById('lights').addEventListener('click', function() {
+    var navbar = document.getElementById('navbar');
+    if (navbar.style.display === 'none' || navbar.style.display === '') {
+      navbar.style.display = 'block';
+    } else {
+      navbar.style.display = 'none';
+    }
+  });
+</script>
+
+<script type="text/javascript">
+    $(function() {
+     
+        $('a#left').bind('click', function() {
+            $.getJSON('/left', function(data) {
+                
+            });
+            return false;
+        });
+        
+      
+        $('a#center').bind('click', function() {
+            $.getJSON('/center', function(data) {
+               
+            });
+            return false;
+        });
+        
+   
+        $('a#right').bind('click', function() {
+            $.getJSON('/right', function(data) {
+               
+            });
+            return false;
+        });
+        
+  
+        $('a#up').bind('click', function() {
+            $.getJSON('/up', function(data) {
+          
+            });
+            return false;
+        });
+        
+    
+        $('a#down').bind('click', function() {
+            $.getJSON('/down', function(data) {
+        
+            });
+            return false;
+        });
+    });    
+</script>
+
+<script type="text/javascript">
+    var button = document.getElementById('button');
+    button.onclick = function() {
+        var div = document.getElementById('newpost');
+        if (div.style.display !== 'none') {
+            div.style.display = 'none';
+        } else {
+            div.style.display = 'block';
+        }
+    };
+</script>
+</body>
+</html>
