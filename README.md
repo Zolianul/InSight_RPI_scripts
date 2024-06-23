@@ -25,53 +25,98 @@ Necessary imports for the correct and efficient functioning of the script (below
 (Depending on the internet connection, these imports can take between 2 and 10 hours)
 
 "sudo apt-get update
+
 sudo apt-get upgrade
+
 sudo apt-get install gfortran
+
 sudo apt-get install git
+
 sudo apt-get install build-essential
+
 sudo apt-get install cmake
+
 sudo apt-get install wget
+
 sudo apt-get install graphicsmagick
+
 sudo apt-get install curl
+
 sudo apt-get install libgraphicsmagick1-dev
+
 sudo apt-get install libatlas-base-dev
+
 sudo apt-get install libavcodec-dev
+
 sudo apt-get install libboost-all-dev
+
 sudo apt-get install libgtk2.0-dev
+
 sudo apt-get install libavformat-dev
+
 sudo apt-get install libjpeg-dev
+
 sudo apt-get install liblapack-dev
+
 sudo apt-get install libswscale-dev
+
 sudo apt-get install pkg-config
+
 sudo apt-get install python3-dev
+
 sudo apt-get install python3-numpy
+
 sudo apt-get install python3-pip
+
 sudo apt-get install zip
+
 sudo apt-get clean
+
 sudo apt-get install python3-picamera
+
 sudo pip3 install --upgrade picamera[array]
+
 sudo nano /etc/dphys-swapfile -- a configuration file will now be opened, and the following variable will need to be altered from CONF_SWAPSIZE=100 to CONF_SWAPSIZE=1024 and then save / exit nano
+
 sudo /etc/init.d/dphys-swapfile 
+
 mkdir -p dlib
+
 git clone -b 'v19.6' --single-branch https://github.com/davisking/dlib.git dlib/
+
 cd ./dlib
+
 sudo apt-get install cmake
+
 mkdir build; cd build; cmake .. ; cmake --build
+
 pip3 install dlib
+
 sudo nano /etc/dphys-swapfile -- same configuration file as before, now the variable will need to be changed to the original value, from: CONF_SWAPSIZE=1024 to CONF_SWAPSIZE=100 and then save / exit nano
+
 pip3 install numpy
+
 sudo apt-get install python3-scipy
+
 pip3 install scikit-image
+
 sudo apt-get install libjasper-dev
+
 sudo apt-get install libqtgui4
+
 sudo apt-get install python3-pyqt5
+
 sudo apt install libqt4-test
+
 pip3 install opencv-python==3.4.6.27
+
 pip3 install face_recognition 
+
 git clone --single-branch https://github.com/ageitgey/face_recognition.git
+
 cd ./face_recognition/examples && python3 facerec_on_raspberry_pi.py
-python3 facerec_on_raspberry_pi.py
-"
+
+python3 facerec_on_raspberry_pi.py"
 
 After these imports are completed, a reboot is necessary.
 
