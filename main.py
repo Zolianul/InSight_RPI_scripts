@@ -42,6 +42,7 @@ def left():
         for halfstep in range(8):  
             for pin in range(4): 
                 GPIO.output(control_pins[pin], seq[halfstep][pin])
+                GPIO.output(control_pins2[pin], seq[halfstep][pin])
             time.sleep(0.001)  
     return "nothing"
 
@@ -51,7 +52,8 @@ def right():
     for i in range(1 * 256):  
         for halfstep in range(8): 
             for pin in range(4):
-                GPIO.output(control_pins2[pin], seq[halfstep][pin])
+                GPIO.output(control_pins[pin], seq[::-1][halfstep][pin])
+                GPIO.output(control_pins2[pin], seq[::-1][halfstep][pin])
             time.sleep(0.001)
     return "nothing"
 
@@ -60,9 +62,9 @@ def up():
     print("Up")
     for i in range(1 * 256): 
         for halfstep in range(8):  
-            for pin in range(4):  
-                GPIO.output(control_pins[pin], seq[::-1][halfstep][pin])
-                GPIO.output(control_pins2[pin], seq[halfstep][pin])
+            for pin in range(4):
+                GPIO.output(control_pins[pin], seq[halfstep][pin])
+                GPIO.output(control_pins2[pin], seq[::-1][halfstep][pin])
             time.sleep(0.001)  
     return "nothing"
 
